@@ -1,0 +1,35 @@
+# One-command local stack: MongoDB + the Next.js app.
+#   docker compose up --build
+# Then seed once (in another terminal):
+#   docker compose exec app npm run seed
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongo:27017/food-ordering-db
+      JWT_SECRET: ${JWT_SECRET:-please-change-this-in-production}
+      JWT_EXPIRES_IN: 7d
+      BCRYPT_ROUNDS: "10"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo-data:

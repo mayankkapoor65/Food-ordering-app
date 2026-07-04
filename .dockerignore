@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.mongodb-data
+npm-debug.log*
+*.md
+.env.local
+.env*.local
+coverage
+Dockerfile
+docker-compose.yml
+.dockerignore
