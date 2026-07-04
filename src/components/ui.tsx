@@ -62,6 +62,16 @@ export function money(country: string, n: number) {
   return country === "INDIA" ? `₹${val}` : `$${val}`;
 }
 
+// Approx USD→INR rate used to display all amounts in a single currency (₹).
+// Adjust here if a live/other rate is needed.
+export const USD_TO_INR = 88;
+
+// Format any order amount in Indian Rupees, converting America (USD) totals.
+export function moneyINR(country: string, n: number) {
+  const inr = country === "AMERICA" ? n * USD_TO_INR : n;
+  return `₹${inr.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 // Initials for the avatar circle.
 export function initials(name: string) {
   return name

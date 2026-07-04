@@ -6,7 +6,7 @@ import { api, getCached } from "@/lib/apiClient";
 import { useAuth } from "@/lib/useAuth";
 import { useToast } from "@/components/Toast";
 import Navbar from "@/components/Navbar";
-import { CountryBadge, EmptyState, Skeleton, money } from "@/components/ui";
+import { CountryBadge, EmptyState, Skeleton, money, moneyINR } from "@/components/ui";
 import { IconReceipt, IconInfo, IconStore } from "@/components/Icons";
 
 interface OrderItem { name: string; price: number; quantity: number; }
@@ -151,7 +151,16 @@ export default function OrdersPage() {
                   </div>
 
                   <div className="stack gap-2" style={{ alignItems: "flex-end" }}>
-                    <strong className="tabular" style={{ fontSize: 17 }}>{money(o.country, o.totalAmount)}</strong>
+                    <div className="stack" style={{ alignItems: "flex-end", gap: 0 }}>
+                      <strong className="tabular" style={{ fontSize: 17 }}>
+                        {moneyINR(o.country, o.totalAmount)}
+                      </strong>
+                      {o.country === "AMERICA" && (
+                        <span className="subtle" style={{ fontSize: 11 }}>
+                          {money(o.country, o.totalAmount)}
+                        </span>
+                      )}
+                    </div>
                     {o.status === "CART" && (can("CHECKOUT_ORDER") || can("CANCEL_ORDER")) && (
                       <div className="row-flex gap-2 wrap" style={{ justifyContent: "flex-end" }}>
                         {can("CHECKOUT_ORDER") && (
